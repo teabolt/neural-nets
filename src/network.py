@@ -2,6 +2,7 @@
 
 """A neural network to classify handwritten digits"""
 
+
 # Standard
 import random
 
@@ -26,15 +27,6 @@ class Network(object):
         # then for each neuron in the next layer, generate weights going from all the neurons of the current layer
         self.weights = [np.random.randn(y, x) for (x, y) in zip(sizes[:-1], sizes[1:])]
 
-    # @staticmethod
-    # def sigmoid(z):
-    #     """Apply the sigmoid activation function to a (vector) input z"""
-    #     return 1/(1+np.exp(-z))
-
-    # def activate(f, z):
-    #     """Apply the activation function f on the input z"""
-    #     return f(z)
-
     def feedforward(self, a):
         """Given the input vector a (from input layer) ((n, 1) numpy array), calculate the output of a neural network (from the output layer), given an arbitrary number of in-between hidden layers"""
         for (b, w) in zip(self.biases, self.weights):
@@ -47,8 +39,8 @@ class Network(object):
         training_data = list(training_data) # python3 implementation
         n = len(training_data) # number of training_data points
 
-        if test_data: # some pre-processing to be more efficiency when testing afterwards
-            test_data = list(test_data) # python3 detail 
+        if test_data: # some pre-processing to be more efficient when testing afterwards
+            test_data = list(test_data) # python3 detail
             n_test = len(test_data) # number of test_data points
 
         # execute epochs
@@ -144,11 +136,15 @@ class Network(object):
 
         # normalise - activation vectors to actual 'outputs', comparable to labels
         test_results = [(np.argmax(self.feedforward(x)), y) for (x, y) in test_data]
-        # for (x, y) in test_results:
-        #     if x == y:
-        #         print(x, y)
+
         # calculate number of matches
         return sum(int(x == y) for (x, y) in test_results)
+
+    @staticmethod
+    def activate(f, z):
+        """Apply the activation function f on the input z"""
+        return f(z)
+
 
 # Generic maths functions
 
@@ -158,17 +154,18 @@ def sigmoid(z):
 
 def sigmoid_prime(z):
     """Derivative of the sigmoid function"""
-    # direct or alternate form: sigmoid(z)*(1-sigmoid(z))
-    return sigmoid(z)*(1-sigmoid(z))
+    # alternate form: sigmoid(z)*(1-sigmoid(z))
+    return np.exp(-z)/(1+np.exp(-z)**2)
+
 
 # Tests
 
 def main():
     net = Network([3, 5, 2])
-    # print(net.sigmoid(-10))
-    # print(net.weights)
-    # print(net.biases)
-    # print(net.feedforward(np.array([0.1, 0.75, 0.5]).reshape(3, 1)))
+    print(net.sigmoid(-10))
+    print(net.weights)
+    print(net.biases)
+    print(net.feedforward(np.array([0.1, 0.75, 0.5]).reshape(3, 1)))
     net.SGD([([0, 1, 0.5],[0, 0.2]), ([0, 0.7, 0.5],[0.3, 0.2]), ([1, 1, 0.5],[1, 0.2]), ([0.5, 1, 0.5],[0.4, 0.2])], 1, 2, 0.2, [([0, 0, 0],[0, 0]), ([1, 0.5, 1],[0.2, 1]), ([0.2, 0.3, 0.5],[0.4, 0.5])])
 
 if __name__ == '__main__':
