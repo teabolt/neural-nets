@@ -14,7 +14,7 @@ import network
 
 # Note that the code needs to be executed in the 'src' directory, to ensure relative paths are correct
 
-def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_batch_size=10, eta=3):
+def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_batch_size=10, eta=3, more_results=True):
     """Create, train, and save a neural network from arguments. Contains indicative output for the user.
     data_path is the directory path of the image data,
     net_path is the path to which to save the neural net (the path is assumed to exist) and the name of the file,
@@ -32,7 +32,7 @@ def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_b
     net = network.Network([784]+hidden_layers+[10])
 
     print('training...')
-    net.SGD(training_data, epochs, mini_batch_size, eta, test_data)
+    net.SGD(training_data, epochs, mini_batch_size, eta, test_data, more_results)
     print('training finished')
 
     print('saving...')
@@ -40,15 +40,17 @@ def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_b
         # default filename contains dash-separated data on: current date and time, some hyperparameters used, network's accuracy (integer percent), a random integer between 0 and 10000 (decrease likelihood of colliding filenames)
         training_data, validation_data, test_data = mnist_loader.load_data_wrapper(data_path)
         time = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M')
-        hyperparams = '{}-{}-{}-{}-{}'.format(epochs, len(hidden_layers), max(hidden_layers), mini_batch_size, int(eta))
+        hyperparams = '{0}-{1}-{2}-{3}-{4}'.format(epochs, len(hidden_layers), 
+            max(hidden_layers), mini_batch_size, int(eta))
         test_data = list(test_data)
         n_test = len(test_data)
         n_correct = net.evaluate(test_data)
-        print(n_test)
-        print(n_correct)
         accuracy = int(n_correct/n_test*100)
         rand_num = random.randint(0, 1000)
-        net_path = dir_path + '../trained_nets/net-{}-{}-{}-{}.pkl'.format(time, hyperparams, accuracy, rand_num)
+
+        # filenames are systematic so that later on the names could be used to extract information, 
+        # eg: best accuracy network out of many
+        net_path = dir_path + '../trained_nets/net-{0}-{1}-{2}-{3}.pkl'.format(time, hyperparams, accuracy, rand_num)
 
     # truncate file if already exists (in the unlikely case, save both nets in one file)
     with open(net_path, 'w+b') as f_net: 
@@ -57,7 +59,7 @@ def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_b
     print('finished')
 
 def main():
-    get_net(epochs=1)
+    get_net(epochs=10, more_results=True)
 
 if __name__ == '__main__':
     main()

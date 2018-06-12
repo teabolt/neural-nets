@@ -33,8 +33,10 @@ class Network(object):
             a = sigmoid(np.dot(w, a) + b)
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None):
-        """Let a neural network learn with Stochastic Gradient Descent. Use Gradient Descent (minimise cost function), but approximate the cost gradient with mini-batches (with mini_batch_size integer number of training data) of the training data (list of (x, y) tuples, where x is the input and y is its desired output). Once learned from all the batches, start over, for a number of epochs (such repetitions). eta is the learning rate with which to update the network. test_data is optional progress display."""
+    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None, more_results=False):
+        """Let a neural network learn with Stochastic Gradient Descent. Use Gradient Descent (minimise cost function), but approximate the cost gradient with mini-batches (with mini_batch_size integer number of training data) of the training data (list of (x, y) tuples, where x is the input and y is its desired output). Once learned from all the batches, start over, for a number of epochs (such repetitions). eta is the learning rate with which to update the network. test_data is optional progress display.
+        more_results flag makes the output be more detailed (incorrect classification number, accuracy percentages, changes in results over epochs, etc)
+        """
         
         training_data = list(training_data) # python3 implementation
         n = len(training_data) # number of training_data points
@@ -42,6 +44,9 @@ class Network(object):
         if test_data: # some pre-processing to be more efficient when testing afterwards
             test_data = list(test_data) # python3 detail
             n_test = len(test_data) # number of test_data points
+
+        if more_results:
+            results = [] # save the results after each test in a list for later analysis
 
         # execute epochs
         for j in range(epochs):
@@ -53,7 +58,26 @@ class Network(object):
                 self.update_mini_batch(mini_batch, eta)
 
             if test_data:
-                print('Epoch {}: {} out of {} correct'.format(j, self.evaluate(test_data), n_test))
+                n_correct = self.evaluate(test_data)
+                r = [] # build a result string, according to the build pattern: list of strings -> join to string
+                r.append('Epoch {}:'.format(j))
+                r.append('{} out of {} correct'.format(n_correct, n_test))
+                if more_results:
+                    # more printing details
+                    n_incorrect = n_test - n_correct
+                    acc = n_correct/n_test*100
+                    r.append('({} incorrect)'.format(n_incorrect))
+                    r.append('({:.2f}% accuracy)'.format(acc))
+
+                    # save results
+                    result = (n_correct, self.biases, self.weights) # (number of correct classifications, biases, weights)
+                    results.append(result) # epoch(index) -> result
+                    if j != 0: # (**better solution required to testing this condition each time**)
+                        prev_correct = results[j-1][0]
+                        d_correct = result[0] - prev_correct
+                        d_acc = acc - prev_correct/n_test*100
+                        r.append('({:+} change in correctness ({:+.2f}%))'.format(d_correct, d_acc))
+                print(' '.join(r))
             else:
                 print('Epoch {} completed'.format(j))
 
