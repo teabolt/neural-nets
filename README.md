@@ -29,3 +29,4 @@ The code is to be tinkered with, modified, and extended.
 * optimise how data is loaded for use, eg: now the 'live' data is saved into a python zip object, which is then explictitly converted to a list (as of python3). There might be better ways to go about this?
 * port the network to learn from the data in the original MNIST format instead of M. Nielsen's, to understand how the data was reformatted better
 * more control over how the gradient is calculated, eg: not just with backpropagation, but also apply other differentiation ways?
+* 'higher derivatives' for changes in classification accuracy over epochs - eg: change from one epoch to another('), change in that change(''), change in that change in that change(''') ... (somehow use this to tell when learning declines in some way?)
