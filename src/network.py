@@ -33,9 +33,19 @@ class Network(object):
             a = sigmoid(np.dot(w, a) + b)
         return a
 
-    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None, more_results=False):
-        """Let a neural network learn with Stochastic Gradient Descent. Use Gradient Descent (minimise cost function), but approximate the cost gradient with mini-batches (with mini_batch_size integer number of training data) of the training data (list of (x, y) tuples, where x is the input and y is its desired output). Once learned from all the batches, start over, for a number of epochs (such repetitions). eta is the learning rate with which to update the network. test_data is optional progress display.
-        more_results flag makes the output be more detailed (incorrect classification number, accuracy percentages, changes in results over epochs, etc)
+    def SGD(self, training_data, epochs, mini_batch_size, eta, test_data=None, more_results=False, best_in_session=False, stats=False):
+        """Let a neural network learn with Stochastic Gradient Descent. 
+        Use Gradient Descent (minimise cost function), but approximate the cost gradient with mini-batches 
+        (with mini_batch_size integer number of training data) of the training data (list of (x, y) tuples, 
+        where x is the input and y is its desired output).
+        Once learned from all the batches, start over, for a number of epochs (such repetitions). 
+        eta is the learning rate with which to update the network. 
+        test_data is optional progress display.
+        more_results flag makes the test data output more detailed 
+        (incorrect classification number, accuracy percentages, changes in results over epochs, etc)
+        best_in_session flag sets the network's parameters to the ones that gave the best test classification no. 
+        in the whole training session, instead of leaving the network with the most recent parameters.
+        stats flag after the training prints various statistics regarding the set of accuracies achieved
         """
         
         training_data = list(training_data) # python3 implementation
@@ -71,6 +81,8 @@ class Network(object):
 
                     # save results
                     result = (n_correct, self.biases, self.weights) # (number of correct classifications, biases, weights)
+                    # not using a dict such as: accuracy -> (biases, weights)
+                    # because 'accuracy' (number of correct classifications) can repeat
                     results.append(result) # epoch(index) -> result
                     if j != 0: # (**better solution required to testing this condition each time**)
                         prev_correct = results[j-1][0]
@@ -80,6 +92,26 @@ class Network(object):
                 print(' '.join(r))
             else:
                 print('Epoch {} completed'.format(j))
+
+        print('Setting best parameters out of the training session...')
+        if test_data and best_in_session: # could be a better way
+            curr_params = results[-1][1:] # or self.biases, self.weights
+            # will check each result for its classification - better way? 
+            # Keep track of the best result *during* training?
+            best_params = max(results, key=lambda results: results[0])[1:]
+            self.biases, self.weights = best_params
+            print('Final number of correct classifications: {} / {}'.format(self.evaluate(test_data), n_test))
+
+        print('Accuracy statistics...')
+        if test_data and stats:
+            # arithmetic mean average
+            # standard deviation
+            # varience
+            # min
+            # max
+            # differences
+
+        ## To-do: refactor this massive function - test(), train(), etc functions
 
     def update_mini_batch(self, mini_batch, eta):
         """Update the weights and biases of a network using a mini-batch training data (list of (x, y) tuples) supplied and gradient descent (with learning rate eta) and backpropagation to compute the gradients."""
@@ -107,10 +139,10 @@ class Network(object):
 
     def backprop(self, x, y):
         """Backpropagation algorithm
-        Return a tuple ``(nabla_b, nabla_w)`` representing the
-        gradient for the cost function C_x.  ``nabla_b`` and
+        Return a tuple '(nabla_b, nabla_w)' representing the
+        gradient for the cost function C_x.  'nabla_b`` and
         ``nabla_w`` are layer-by-layer lists of numpy arrays, similar
-        to ``self.biases`` and ``self.weights``."""
+        to ``self.biases`` and ``self.weights."""
         # gradients, filled with zeros and of shape of the neural net's parameters
         nabla_b = [np.zeros(b.shape) for b in self.biases]
         nabla_w = [np.zeros(w.shape) for w in self.weights]
@@ -169,6 +201,9 @@ class Network(object):
         """Apply the activation function f on the input z"""
         return f(z)
 
+    def learning_algorithm(self, al):
+        """Apply the learning algorithm al to the neural network"""
+        pass
 
 # Generic maths functions
 

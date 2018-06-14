@@ -14,7 +14,7 @@ import network
 
 # Note that the code needs to be executed in the 'src' directory, to ensure relative paths are correct
 
-def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_batch_size=10, eta=3, more_results=True):
+def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_batch_size=10, eta=3, more_results=True, best_in_session=True, stats=True):
     """Create, train, and save a neural network from arguments. Contains indicative output for the user.
     data_path is the directory path of the image data,
     net_path is the path to which to save the neural net (the path is assumed to exist) and the name of the file,
@@ -32,7 +32,7 @@ def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_b
     net = network.Network([784]+hidden_layers+[10])
 
     print('training...')
-    net.SGD(training_data, epochs, mini_batch_size, eta, test_data, more_results)
+    net.SGD(training_data, epochs, mini_batch_size, eta, test_data, more_results, best_in_session, stats)
     print('training finished')
 
     print('saving...')
@@ -59,7 +59,7 @@ def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_b
     print('finished')
 
 def main():
-    get_net(epochs=10, more_results=True)
+    get_net(epochs=15, more_results=True, best_in_session=True, stats=True)
 
 if __name__ == '__main__':
     main()
