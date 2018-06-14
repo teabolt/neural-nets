@@ -10,6 +10,11 @@ The code is to be tinkered with, modified, and extended.
 * 'net_utils.py/get_net()' generates, trains, and saves a neural net (just a shortcut to typing out many commands in the command line)
 * 'data/own' contains own handwritten digits, outside of the MNIST data
 
+## Project workflow
+
+* Directly commit to master if have a single ungrouped change
+* Create a branch and merge with master when finished if plan to implement a number of related changes in multiple commits
+
 ## Desired future functionality / to-do
 * pure non-numpy implementation of the core neural net code - understand the data structures behind biases, weights, gradients, etc. better
 * more power over the mnist_loader.py - eg: load only parts of the data (test or training or validation only), parts of the 'sub-data' (eg: 10,000 instead of all the 50,000 images of the net)
@@ -21,7 +26,7 @@ The code is to be tinkered with, modified, and extended.
 * 'timeit' information, between epochs, between start and finish of training
 * a neural net / algorithm / program to determine optimal hyper-parameters (a genetic algorithm?) (automatic logarithmic-scale tests?)
 * non-random / configurable initialisation of a network's weights and biases (zeroed at first?)
-* calculate the variance, etc of the set of all the evaluations of a network (eg: how spread out are the network's accuracies over epochs)
+* calculate the variance, etc of the set of all the evaluations of a network (eg: how spread out are the network's accuracies over epochs) (statistics overview)
 * combine multiple neural networks (for non-overlapping inputs)
 * go beyond MNIST to recognise handwritten digits - train with images of your own handwritten digits, with digits on different backgrounds, coloured instead of grayscale, etc
 * finer control over the network - which neurons connect to which, recurrent instead of only feedforward networks
@@ -30,3 +35,4 @@ The code is to be tinkered with, modified, and extended.
 * port the network to learn from the data in the original MNIST format instead of M. Nielsen's, to understand how the data was reformatted better
 * more control over how the gradient is calculated, eg: not just with backpropagation, but also apply other differentiation ways?
 * 'higher derivatives' for changes in classification accuracy over epochs - eg: change from one epoch to another('), change in that change(''), change in that change in that change(''') ... (somehow use this to tell when learning declines in some way?)
+* graphing of accuracy over epochs, etc, with various Python libraries
