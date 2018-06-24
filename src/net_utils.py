@@ -10,9 +10,13 @@ import pickle
 # Own
 import mnist_loader
 import network
-
+import genetic
 
 # Note that the code needs to be executed in the 'src' directory, to ensure relative paths are correct
+
+def optimise_hparams():
+    """Use a genetic algorithm to find the optimal hyperparameters for a neural network"""
+    pass
 
 def get_net(data_path=None, net_path=None, hidden_layers=None, epochs=30, mini_batch_size=10, eta=3, more_results=True, best_in_session=True, stats=True):
     """Create, train, and save a neural network from arguments. Contains indicative output for the user.
